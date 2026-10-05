@@ -1,0 +1,211 @@
+{
+  "main": {
+    "id": "8117d869fabca49e",
+    "type": "split",
+    "children": [
+      {
+        "id": "526274428e121a16",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "c87471cdeac6314e",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Bash Scripting.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Bash Scripting"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "266d783ef94b36c5",
+    "type": "split",
+    "children": [
+      {
+        "id": "76cfc62c99658e3c",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "27ab1770b7790b16",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Files"
+            }
+          },
+          {
+            "id": "1a1b1e90913f7b99",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Search"
+            }
+          },
+          {
+            "id": "6f8decf45443c9b9",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-bookmark",
+              "title": "Bookmarks"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "9cf5c46a89e25099",
+    "type": "split",
+    "children": [
+      {
+        "id": "6170521c4144b918",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "263f042854676132",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Bash Scripting.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Backlinks"
+            }
+          },
+          {
+            "id": "0f541ceccd048889",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Bash Scripting.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Outgoing links"
+            }
+          },
+          {
+            "id": "89a3645f1d0a9f6d",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Tags"
+            }
+          },
+          {
+            "id": "a7e632e169ac3380",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "All properties"
+            }
+          },
+          {
+            "id": "f17d9a9d35e63f1a",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Bash Scripting.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Outline"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "daily-notes:Open today's daily note": false,
+      "templates:Insert template": false,
+      "command-palette:Open command palette": false,
+      "bases:Create new base": false
+    }
+  },
+  "active": "c87471cdeac6314e",
+  "lastOpenFiles": [
+    "pics/Pasted image 20260906200439.png",
+    "pics/Pasted image 20260906195254.png",
+    "pics/Pasted image 20260906195236.png",
+    "bash/bash.sh",
+    "bash",
+    "scripts",
+    "New folder",
+    "pics/Pasted image 20260819184553.png",
+    "pics/Pasted image 20260819184235.png",
+    "pics/Pasted image 20260819183833.png",
+    "pics/Pasted image 20260819183625.png",
+    "pics/Pasted image 20260819183435.png",
+    "pics/Pasted image 20260819183134.png",
+    "pics/Pasted image 20260819182908.png",
+    "pics/Pasted image 20260819182730.png",
+    "pics",
+    "Bash Scripting.md"
+  ]
+}

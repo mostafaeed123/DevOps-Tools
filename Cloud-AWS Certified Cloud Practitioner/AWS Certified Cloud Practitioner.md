@@ -51,6 +51,8 @@
 
 ---
 - الـ AZ بتكون من 3-6 AZ فى نفس الـ region
+![[Pasted image 20261008144157.png]]
+- من هنا ممكن تغير الـ region الى انته هتشتغل عليها 
 
 ----
 # start
@@ -68,7 +70,7 @@
 
 
 ----
-# how to  Create user ? 
+## how to  Create user ? 
 - الاول هتكون واقف هنا 
 ![[Pasted image 20261005145739.png]]
 - هنا هتضغط على create user   
@@ -135,7 +137,7 @@
 
 ---
 ---
-# How to create group
+## How to create group
 
 ![[Pasted image 20261005160350.png]]
 - هنا هتعمل يوزر جديد
@@ -154,7 +156,7 @@
 ---
 ---
 
-# polices 
+## polices 
 - دى بتكون عباره عن list of permission 
 
 
@@ -163,7 +165,7 @@
 - هنا لو انته مثلا عايز الـ cluster يكلم ec2 يبقى لازم نعمله role ودى من ضمن مميزات الـ role
 - الـ policy انته بتديه لليوزر والـ role انته بتديه للـ non user 
 
-# multifactor authenticator
+## multifactor authenticator
 ![[Pasted image 20261005162524.png]]
 - لو دخلت على  يوزر هتلاقى انه هنا مثلا بيقولك ان مفيش multifactor authenticator
 - انته ممكن تفعله 
@@ -189,7 +191,7 @@
 
 ---
 ---
-# how do you can access aws 
+## how do you can access aws 
 
 ## first one 
 - اول واحده من خلال الـ console من على الويب ممكن تعمل access لـ aws 
@@ -395,7 +397,7 @@ aws iam add-user-to-group --user-name myuser --group-name developers
 - ممكن تستخدم الـ SDK يعنى تستخدم terraform 
 
 ---
-# Cloud trail
+## Cloud trail
 
 
 ![[Pasted image 20261005183035.png]]
@@ -423,3 +425,205 @@ aws iam add-user-to-group --user-name myuser --group-name developers
 - والـ cloud trail بيعرفك مين الى عمل ايه ومين الى معملش علشان لو حصل مشكله 
 ![[Pasted image 20261005185156.png]]
 - هنا ممكن تفلتر التاريخ
+
+# EC2 Instance
+
+## EC2 Instance types
+
+### compute optimized
+- ده نوع من الـ EC2 Instance بتستخدمه لما يكون فيه معالجه عاليه او لما يكون فيه مثلا  تكون هتستخدم حاجه زى الـ machine learning    
+
+### Memory Optimized 
+- ده بيديك ميورى عالى  لو انته عندك داتا بيز كبيره 
+
+### Storage optimized 
+
+- لو انته التخزين هيكون عالى هتستخدمها  او هتحط داتا كتيره 
+
+---
+## Start
+
+![[Pasted image 20261008144345.png]]
+
+
+![[Pasted image 20261008144446.png]]
+- ده شكل الداش بورد بتاعه الـ ec2 
+
+---
+![[Pasted image 20261008144548.png]]
+
+- علشان تدخل على الـ instance
+- هنا واضح انى مش عامل اى instance فى الـ region الى انا فيها 
+---
+
+![[Pasted image 20261008144646.png]]
+انا لو غيرت الـ region وبقيت مثلا فى Virginia كده هيوريك الـ instances الى انته عاملها هناك لو انته عامل اصلا  كل region هيكون ليها الـ instance الخاص بيها 
+
+
+## Create instance
+![[Pasted image 20261008144934.png]]
+- هنا انا هعمل launch instance  علشان اعمل سرفر جديد  وهيكون فى region اسمها Frankfurt 
+
+![[Pasted image 20261008145114.png]]
+
+- هنا فى البدايه هختار الاسم وبعدها هختار الماشين بتاعه اوبنتو 
+![[Pasted image 20261008145204.png]]
+- هنا بتختار عدد الماشينز الى انته عايز تعملها 
+![[Pasted image 20261008145332.png]]
+هنا بيخيرك عايز اى version من نسخه ابونتو 
+
+![[Pasted image 20261008145355.png]]
+
+----
+----
+- هنا فى الـ instance type 
+
+![[Pasted image 20261008145551.png]]
+- هنا الـ instance type  هنا بيقولك على اماكنيات الماشين وهنا الـ t3 micro يعنى دى اصغر حاجه وبرضه بيقولك على اسعار الماشين لو هى ويندوز ولو هى لينكس 
+![[Pasted image 20261008145823.png]]
+- هتضغط على all generations هيظهرلك كل الـ t3  
+
+- بيكون فيه t3 فيه micro, small , large , flex large 
+
+- ممكن يكون instance type مش موجود فى region معنيه  وفيه انواع تانيه كتيره
+
+## type of pricing
+
+###  On Demand
+- فى الطريقه دى من الدفع ممكن يكون سرفر واحد فيه 100 جيجا ممكن يدى 20 جيجا مثلا لمحمد و20 جيجا لمحمود و 20 جيجا لاحمد يعنى بيكون سرفر واحد وبيتشارك فيه اكثر من حد فى نفس السرفر بس بيكون فيه virtualization  بيكون تكلفته عاليه لانك بتتحاسب بالساعه 
+
+### Reserved 
+- هنا انته مثلا بتحجز السرفر بالسنه فهى بتكون ارخص شويه 
+
+### Saving plans
+الطريقه دى تقريبا زى الـ reserved 
+
+### spot 
+- دى بتقف مثلا بعد مثلا خمس دقايق بتستخدمها فى التسكات الصغيره  فبتكون الفلوس قليله 
+
+### Dedicated instance 
+- دى بتكون نفس السعر بتاعه الـ on demand
+- بس هنا انته بتقول ان انا عايز السرفر ده انا بس الى يكون ليها اكسس عليه 
+![[Pasted image 20261008151727.png]]
+- هنا الانواع بتاعه الدفع 
+
+---
+
+![[Pasted image 20261008152111.png]]
+- هنا انته علشان تتصل بالسرفر هتعمل create key  هنا هيديك الـ private key وهيخلى هوا عنده الباليك key   س
+![[Pasted image 20261008152236.png]]
+
+- هتعمل create
+![[Pasted image 20261008152256.png]]
+اتحمل عندك 
+
+![[Pasted image 20261008152414.png]]
+- هوا هنا نزل عندى انا بس غيرت اسمه 
+
+---
+![[Pasted image 20261008152540.png]]
+- هنا فى سكشن النتورك هنا انته بتختار سكيورتى جروب موجود وبعدها بتختار الـ default او ممكن انك تعمل واحد بنفسك 
+![[Pasted image 20261008152854.png]]
+- هنا بتختار الامكانيات والـ file system 
+![[Pasted image 20261008153027.png]]
+بعد لما تخلص هتضغط هنا هتبدا انها تتعمل 
+
+![[Pasted image 20261008153111.png]]
+ - هنا بيقول انه نجح 
+- هترجع تانى للـ instance
+![[Pasted image 20261008153139.png]]
+- هنا بيقولك انها شغاله 
+![[Pasted image 20261008153245.png]]
+- هنا اتحطت فى المانيا فى AZ اسمها eu-central-1a 
+
+
+![[Pasted image 20261008153353.png]]
+- هنا الـ ip بتاع الماشين والسكيورتى جروب واسم الـ key الى هستخدمه 
+
+
+## How to connect on instance
+
+### First one 
+![[Pasted image 20261008153601.png]]
+- فى البدايه هتحدد الـ instance وبعدها هتعمل connect  الى فى نفس الصفحه دى 
+![[Pasted image 20261008153701.png]]
+- دى الصفحه الى هتظهرلك لما تضغط على connect  لو عايز تتصل بيها من خلال الويب هتضغط برضه على connect الى تحت دى 
+![[Pasted image 20261008153803.png]]
+- بس هنا اداك ايرور علشان بتتصل بيها من غير ما تديها صلاحيه الـ SSH 
+- هتروح للـسكيورتى جروب وتفعلها 
+![[Pasted image 20261008153936.png]]
+- هتدخل هنا على الصفحه دى 
+
+![[Pasted image 20261008154017.png]]
+اول لما تضغط على اول واحده هيظهرلك النص الى تحت هتدخل على الـ inbound rules 
+
+![[Pasted image 20261008154143.png]]
+
+![[Pasted image 20261008154203.png]]
+- هنا علشان تضيف role 
+![[Pasted image 20261008154248.png]]
+انا خليتها هنا كلها اصفار وبورت 22 علشان اى حد يتصل بيها 
+
+بعدها اعمل save roles
+![[Pasted image 20261008154500.png]]
+- كده اتضافت 
+
+![[Pasted image 20261008154409.png]]
+كده دخل عادى 
+
+----
+![[Pasted image 20261008154612.png]]
+- هنا حط  الـ public key عادى جدا  اما الـ private موجود عندى 
+
+### Second one
+![[Pasted image 20261008154817.png]]
+الاول هتعمل connect 
+
+![[Pasted image 20261008154955.png]]
+- هنا لو انته عايز تختار انك تتصل بالماشين من خلال الـ SSH من على مثلا mobaeterm من  جهازك مش من الويب 
+![[Pasted image 20261008155015.png]]
+- بعد كده هتنزل تحت شويه هتلاقى الاوامر دى الى هتكتبها عندك 
+![[Pasted image 20261008155303.png]]
+- هنا دخل على الماشين 
+----
+![[Pasted image 20261008155329.png]]
+- وهنا الـ private key موجود
+
+# EBS  && EFS
+- انته لو عملت ec2 instance  هيتعمل volume هيكون حجمه 8 جيجا 
+![[Pasted image 20261008155702.png]]
+
+---
+---
+![[Pasted image 20261008155908.png]]
+- فى حاله انك مسحت الـ instance فلو انته حاطط جواها داتا كده الداتا هتتسمح 
+![[Pasted image 20261008155933.png]]
+
+---
+- علشان نحل المشكله دى اسخدمنا الـ EBS && EFS
+
+- فى الـ EBS هنا الـ ec2 ينفع تحط فيها volume   واحده بس يعنى الـ EBS ينفع تحط فيها ec2 واحده بس
+
+- اما الـ EFS ينفع تحط فيها اكثر من ec2 يعنى تحط فيها اكثر من volume عادى 
+- لازم تختار نفس الـ AZ الى موجود فيها الـ volume فى الـ 
+
+![[Pasted image 20261008161851.png]]
+- يعنى الـ volume لازم تكون فى نفس الـ AZ بتاع eu-central-a1
+---
+---
+- الاول هتروح على الـ volume كما يلى 
+![[Pasted image 20261008162014.png]]
+
+![[Pasted image 20261008162033.png]]
+- هنا هتدخل على create volume 
+![[Pasted image 20261008162135.png]]
+
+- هنا فى نفس الـ AZ 
+![[Pasted image 20261008162528.png]]
+ - بعدها هتكريت ده 
+![[Pasted image 20261008162604.png]]
+ كده الاتنين اتعملوا 
+![[Pasted image 20261008162714.png]]
+- لو دوست كليك يمين هتلاقى attach volume هتدخل على الصفحه التاليه 
+![[Pasted image 20261008162750.png]]
+- هتلاقى الصفحه دى 

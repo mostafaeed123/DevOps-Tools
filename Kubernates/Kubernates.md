@@ -4434,3 +4434,275 @@ openssl x509 -req -in /etc/kubernetes/pki/aly.csr -CA /etc/kubernetes/pki/ca.crt
 ---
 
 # DaemonSet
+
+- بستخدم الـ DaemonSet فى حاله ان عندى pod وعايز اشغلها على كل الـ nodes يعنى لو عندى pod بستخدمها علشان اللوجز على كل node بدل ما ارح على كل node اعمل الـ pod دى ممكن انى اعمل الـ deamonset  وهى pod واحده الى هتشتغل على كل الـ nodes  ولو ضيفت node جديده الـ pod دى هتتضاف على الـ node دى
+
+
+- ادخل على الـ documentation هتلاقى ملف الـ yml
+
+### شرح الملف الاتى 
+
+```yaml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluentd-elasticsearch
+  namespace: kube-system
+  labels:
+    k8s-app: fluentd-logging
+spec:
+  selector:
+    matchLabels:
+      name: fluentd-elasticsearch
+  template:
+    metadata:
+      labels:
+        name: fluentd-elasticsearch
+    spec:
+      tolerations:
+      # these tolerations are to have the daemonset runnable on control plane nodes
+      # remove them if your control plane nodes should not run pods
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+      containers:
+      - name: fluentd-elasticsearch
+        image: quay.io/fluentd_elasticsearch/fluentd:v5.0.1
+        resources:
+          limits:
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log
+      # it may be desirable to set a high priority class to ensure that a DaemonSet Pod
+      # preempts running Pods
+      # priorityClassName: important
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: varlog
+        hostPath:
+          path: /var/log
+```
+
+```yml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluentd-elasticsearch
+  namespace: kube-system
+  labels:
+    k8s-app: fluentd-logging
+```
+- هنا اسم الـ Deamonset ده هو fluentd-elasticsearch  و هيستخدم namespace اسمها kube-system  
+
+```yml
+selector:
+  matchLabels:
+    name: fluentd-elasticsearch
+template:
+  metadata:
+    labels:
+      name: fluentd-elasticsearch
+```
+
+- لازم الـ matchLabels الى فى الـ selector يتطابق مع الـ template  علشان يحصل apply 
+
+```yml
+      tolerations:
+      # these tolerations are to have the daemonset runnable on control plane nodes
+      # remove them if your control plane nodes should not run pods
+      - key: node-role.kubernetes.io/control-plane
+        operator: Exists
+        effect: NoSchedule
+      - key: node-role.kubernetes.io/master
+        operator: Exists
+        effect: NoSchedule
+```
+- هنا هوا عامل toleration علشان الـ nodes الى عليها taint تتعمل عليها الـ pods دى 
+
+```yml
+      containers:
+      - name: fluentd-elasticsearch
+        image: quay.io/fluentd_elasticsearch/fluentd:v5.0.1
+        resources:
+          limits:
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+```
+- هنا المفروض الـ cpu ميعديش الـ 100m والـ memory ميعديش الـ 200 ميجا والا الـ pod هيحصلها killed 
+
+```yml
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log
+      # it may be desirable to set a high priority class to ensure that a DaemonSet Pod
+      # preempts running Pods
+      # priorityClassName: important
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: varlog
+        hostPath:
+          path: /var/log
+```
+
+- هنا فى جزء الـ volumes الى هو الاتى 
+```yml
+      volumes:
+      - name: varlog
+        hostPath:
+          path: /var/log
+```
+- هنا اسم الـ volume اسمه varlog وهنا المسار الى هوا ده  hostPath هنا   path: /var/log  هنا المسار ده بيكون موجود على الـ node نفسها ومش لازم تعمل قبلها volume انته هنا بتختار المسار الى انته عايزه على الـ node 
+
+----
+
+```yml
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log
+```
+- هنا فى الـ volumeMounts هنا الاسم لازم يكون نفس الى فى الـ volumes   
+-  اما فى الـ mountPath ده الى هيكون موجود فى الـ pod وهيحصلها mount   واللوجز الى على الـ pod هتوصل للـ node الى هوا عليها فى المسار الى اسمه  /var/log 
+
+---
+يعني:
+
+- الـ `hostPath.path` = المسار على **الـ Node (الجهاز الفعلي)**
+- الـ `mountPath` = المسار اللي هيظهر بيه جوه **الـ container**
+- الاسم `varlog` هو الرابط بينهم
+#### هل هو موجود على كل Node؟
+
+أيوه، لأن الـ DaemonSet بيشغّل Pod على كل Node، وكل Pod بيعمل mount لـ `/var/log` **بتاع الـ Node اللي هو شغال عليها**. يعني:
+
+```yml
+Node 1:  /var/log (بتاع Node 1)  ←→  Pod على Node 1
+Node 2:  /var/log (بتاع Node 2)  ←→  Pod على Node 2
+Node 3:  /var/log (بتاع Node 3)  ←→  Pod على Node 3
+```
+
+----
+
+```bash
+mostafa@MY-Home:~/Documents$ kubectl get daemonsets.apps -n kube-system 
+NAME         DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR            AGE
+kindnet      3         3         3       3            3           <none>                   13d
+kube-proxy   3         3         3       3            3           kubernetes.io/os=linux   13d
+mostafa@MY-Home:~/Documents$ 
+```
+
+- كده معنها ان الـ pod دى موجوده فى تلاته nodes
+---
+
+```bash
+mostafa@MY-Home:~/Documents$ kubectl apply -f daemonset.yml 
+daemonset.apps/nginx-server-logs created
+mostafa@MY-Home:~/Documents$ kubectl get daemonsets.apps nginx-server-logs 
+NAME                DESIRED   CURRENT   READY   UP-TO-DATE   AVAILABLE   NODE SELECTOR   AGE
+nginx-server-logs   2         2         2       2            2           <none>          18s
+```
+- هنا اتعمل على اتنين node بس علشان انا شيلت الـ toleration فمتعملش على الـ master node 
+
+ - وكنت عملتها على الـ default كما يلى 
+
+```yml
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: nginx-server-logs
+  namespace: default
+  labels:
+    k8s-app: nginx-server
+spec:
+  selector:
+    matchLabels:
+      name: nginx-server
+  template:
+    metadata:
+      labels:
+        name: nginx-server
+    spec:
+      containers:
+      - name: nginx-server
+        image: nginx
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log/n
+      volumes:
+      - name: varlog
+        hostPath:
+          path: /var/log
+```
+
+```bash
+
+mostafa@MY-Home:~/Documents$ kubectl get pod -o wide 
+NAME                      READY   STATUS    RESTARTS      AGE     IP           NODE           NOMINATED NODE   READINESS GATES
+nginx                     1/1     Running   5 (19m ago)   8d      10.244.1.2   minikube-m02   <none>           <none>
+nginx-server-logs-qp8cm   1/1     Running   0             3m23s   10.244.1.3   minikube-m02   <none>           <none>
+nginx-server-logs-r688k   1/1     Running   0             3m23s   10.244.2.4   minikube-m03   <none>           <none>
+nginx123                  1/1     Running   3 (19m ago)   2d21h   10.244.2.3   minikube-m03   <none>           <none>
+nginx2                    1/1     Running   4 (19m ago)   5d22h   10.244.2.2   minikube-m03   <none>           <none>
+```
+
+
+# StatefulSets
+### يعني إيه StatefulSet؟
+
+الـ StatefulSet هو controller بيشغّل Pods **ليها هوية ثابتة وتخزين خاص بيها**. على عكس الـ Deployment اللي بيعتبر كل الـ Pods متطابقة وممكن تتبدل في أي وقت، هنا كل Pod **له شخصية مميزة** وبتفضل معاه حتى لو اتمسح واتعمل من جديد.
+# Deployment vs StatefulSet
+
+|النقطة|Deployment|StatefulSet|
+|---|---|---|
+|**أسماء الـ Pods**|عشوائية مثل `nginx-7d9f-xk2`|ثابتة ومرتبة مثل `web-0`, `web-1`, `web-2`|
+|**ترتيب التشغيل**|الـ Pods بتشتغل بشكل عادي بدون ترتيب محدد|بتشتغل بالترتيب: `0` ثم `1` ثم `2`|
+|**التخزين**|ممكن يكون مشترك أو مفيش Storage|**كل Pod له PVC خاص به**|
+|**لو Pod اتمسح**|يرجع **باسم جديد**|يرجع **بنفس الاسم ونفس الـ volume**|
+|**الـ DNS**|على مستوى الـ Service|**كل Pod له DNS ثابت**|
+
+### لازمتها: امتى تستخدمه؟
+
+للتطبيقات اللي **بتحتاج تحفظ حالة (state)**:
+```yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: web
+spec:
+  selector:
+    matchLabels:
+      app: nginx # has to match .spec.template.metadata.labels
+  serviceName: "nginx"
+  replicas: 3 # by default is 1
+  minReadySeconds: 10 # by default is 0
+  template:
+    metadata:
+      labels:
+        app: nginx # has to match .spec.selector.matchLabels
+    spec:
+      containers:
+      - name: nginx
+        image: registry.k8s.io/nginx-slim:0.24
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        - name: www
+          mountPath: /usr/share/nginx/html
+  volumeClaimTemplates:
+  - metadata:
+      name: www
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "my-storage-class"
+      resources:
+        requests:
+          storage: 1Gi
+```
